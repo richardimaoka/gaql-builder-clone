@@ -1,8 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 
-const CheckBox = ({ fieldName }) => {
-  const [checked, setChecked] = useState(false);
+const CheckBox = ({ fieldName, checked, onChange }) => {
   return (
     <div>
       <input
@@ -10,10 +9,7 @@ const CheckBox = ({ fieldName }) => {
         id={fieldName}
         checked={checked}
         label="abc"
-        onChange={() => {
-          setChecked(!checked);
-          console.log("onChange called");
-        }}
+        onChange={onChange}
       />
       <label htmlFor={fieldName}>{fieldName}</label>
     </div>
@@ -21,7 +17,7 @@ const CheckBox = ({ fieldName }) => {
 };
 
 function App() {
-  const attributeResourceFields = {
+  const [attributeResourceFields, setAttributeResourceFields] = useState({
     "ad_group.ad_rotation_mode": { checked: false },
     "ad_group.audience_setting.use_audience_grouped": { checked: false },
     "ad_group.base_ad_group": { checked: false },
@@ -51,13 +47,28 @@ function App() {
     "ad_group.tracking_url_template": { checked: false },
     "ad_group.type": { checked: false },
     "ad_group.url_custom_parameter": { checked: false },
+  });
+
+  const setSingleField = (fieldName, checked) => {
+    const updatedFields = {};
+    Object.assign(updatedFields, attributeResourceFields);
+    updatedFields[fieldName]["checked"] = checked;
+    setAttributeResourceFields(updatedFields);
   };
 
   return (
     <div>
-      {Object.keys(attributeResourceFields).map((fieldName, index) => (
-        <CheckBox key={fieldName} fieldName={fieldName} />
-      ))}
+      {Object.keys(attributeResourceFields).map((fieldName, index) => {
+        const checked = attributeResourceFields[fieldName].checked;
+        return (
+          <CheckBox
+            key={fieldName}
+            fieldName={fieldName}
+            checked={checked}
+            onChange={() => setSingleField(fieldName, !checked)}
+          />
+        );
+      })}
     </div>
   );
 }
