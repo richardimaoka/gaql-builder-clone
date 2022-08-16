@@ -56,6 +56,17 @@ function App() {
     setAttributeResourceFields(updatedFields);
   };
 
+  const gaqlString = (fieldsObject) => {
+    const fieldNames = Object.keys(fieldsObject);
+    const checkedFields = fieldNames.filter(
+      (fieldName) => fieldsObject[fieldName].checked
+    );
+    return `SELECT
+${checkedFields.map((fieldName) => "  " + fieldName).join(",\n")}
+FROM ad_group
+`;
+  };
+
   return (
     <div>
       <div style={{ marginBottom: "20px" }}>
@@ -71,7 +82,11 @@ function App() {
           );
         })}
       </div>
-      <div>SELECT ... FROM ad_group</div>
+      <div>
+        <pre>
+          <code>{gaqlString(attributeResourceFields)}</code>
+        </pre>
+      </div>
     </div>
   );
 }
