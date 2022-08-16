@@ -1,17 +1,34 @@
 import { useState } from "react";
 import "./App.css";
 
-const CheckBox = ({ fieldName, checked, onChange }) => {
+const CheckBox = ({ fieldName, checked, onChange }) => (
+  <div>
+    <input
+      type="checkbox"
+      id={fieldName}
+      checked={checked}
+      label="abc"
+      onChange={onChange}
+    />
+    <label htmlFor={fieldName}>{fieldName}</label>
+  </div>
+);
+
+const GAQLString = ({ fieldsObject }) => {
+  const fieldNames = Object.keys(fieldsObject);
+  const checkedFields = fieldNames.filter(
+    (fieldName) => fieldsObject[fieldName].checked
+  );
+  const gaqlString = `SELECT
+${checkedFields.map((fieldName) => "  " + fieldName).join(",\n")}
+FROM ad_group
+`;
+
   return (
     <div>
-      <input
-        type="checkbox"
-        id={fieldName}
-        checked={checked}
-        label="abc"
-        onChange={onChange}
-      />
-      <label htmlFor={fieldName}>{fieldName}</label>
+      <pre>
+        <code>{gaqlString}</code>
+      </pre>
     </div>
   );
 };
@@ -56,17 +73,6 @@ function App() {
     setAttributeResourceFields(updatedFields);
   };
 
-  const gaqlString = (fieldsObject) => {
-    const fieldNames = Object.keys(fieldsObject);
-    const checkedFields = fieldNames.filter(
-      (fieldName) => fieldsObject[fieldName].checked
-    );
-    return `SELECT
-${checkedFields.map((fieldName) => "  " + fieldName).join(",\n")}
-FROM ad_group
-`;
-  };
-
   return (
     <div>
       <div style={{ marginBottom: "20px" }}>
@@ -82,11 +88,7 @@ FROM ad_group
           );
         })}
       </div>
-      <div>
-        <pre>
-          <code>{gaqlString(attributeResourceFields)}</code>
-        </pre>
-      </div>
+      <GAQLString fieldsObject={attributeResourceFields} />
     </div>
   );
 }
