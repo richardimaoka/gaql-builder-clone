@@ -58,17 +58,20 @@ function App() {
 
   return (
     <div>
-      {Object.keys(attributeResourceFields).map((fieldName, index) => {
-        const checked = attributeResourceFields[fieldName].checked;
-        return (
-          <CheckBox
-            key={fieldName}
-            fieldName={fieldName}
-            checked={checked}
-            onChange={() => setSingleField(fieldName, !checked)}
-          />
-        );
-      })}
+      <div style={{ marginBottom: "20px" }}>
+        {Object.keys(attributeResourceFields).map((fieldName, index) => {
+          const checked = attributeResourceFields[fieldName].checked;
+          return (
+            <CheckBox
+              key={fieldName}
+              fieldName={fieldName}
+              checked={checked}
+              onChange={() => setSingleField(fieldName, !checked)}
+            />
+          );
+        })}
+      </div>
+      <div>SELECT ... FROM ad_group</div>
     </div>
   );
 }
